@@ -5,23 +5,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Deneme Ansiklopedi — Karun (Kroisos)</title>
 
+<!-- PWA meta -->
+<meta name="theme-color" content="#f3f5f7">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
 <style>
   /* ====== Temel değişkenler ====== */
   :root{
-    --bg:#f3f5f7;
-    --paper:#ffffff;
-    --txt:#1f2328;
-    --muted:#5b616e;
-    --link:#2b6adf;
-    --border:#d8dee4;
-    --rule:#cdd5df;
-    --maxw:1200px;
-    --col-mid:340px;   /* orta sütun (infobox) */
-    --col-right:300px; /* sağ sütun (TOC) */
-    --radius:10px;
-    --shadow:0 1px 2px rgba(0,0,0,.05), 0 12px 24px rgba(0,0,0,.06);
+    --bg:#f3f5f7; --paper:#ffffff; --txt:#1f2328; --muted:#5b616e; --link:#2b6adf;
+    --border:#d8dee4; --rule:#cdd5df; --maxw:1200px; --col-mid:340px; --col-right:300px;
+    --radius:10px; --shadow:0 1px 2px rgba(0,0,0,.05), 0 12px 24px rgba(0,0,0,.06);
   }
-
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",sans-serif}
   a{color:var(--link);text-decoration:none}
@@ -97,6 +92,68 @@
       li.appendChild(a); list.appendChild(li);
     });
   });
+
+  // === Manifest'i tek dosyada üret (ikonlar + link rel=manifest) ===
+  (function addManifest(){
+    // Basit SVG ikon
+    const iconSvg = size =>
+      `<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}">
+         <rect width="100%" height="100%" fill="#2b6adf"/>
+         <text x="50%" y="54%" font-family="system-ui,Segoe UI,Roboto" font-size="${size*0.4}" text-anchor="middle" fill="#fff">K</text>
+       </svg>`;
+
+    // Apple touch icon için PNG data URL (canvas ile üret)
+    const makePngDataUrl = (size=192) => {
+      const c = document.createElement('canvas'); c.width=c.height=size;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = '#2b6adf'; ctx.fillRect(0,0,size,size);
+      ctx.fillStyle = '#fff'; ctx.font = `${Math.round(size*0.5)}px system-ui`;
+      ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('K', size/2, size/2+size*0.04);
+      return c.toDataURL('image/png');
+    };
+
+    // Manifest JSON
+    const manifest = {
+      name: "Deneme Ansiklopedi — Karun",
+      short_name: "Karun",
+      start_url: ".",
+      display: "standalone",
+      background_color: "#f3f5f7",
+      theme_color: "#f3f5f7",
+      icons: [192,512].map(sz=>({
+        src: 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(iconSvg(sz)),
+        sizes: `${sz}x${sz}`,
+        type: 'image/svg+xml',
+        purpose: "any"
+      }))
+    };
+
+    // rel=manifest
+    const blob = new Blob([JSON.stringify(manifest)], {type:'application/manifest+json'});
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('link');
+    link.rel = 'manifest'; link.href = url;
+    document.head.appendChild(link);
+
+    // Apple touch icon (iOS ana ekran)
+    const apple = document.createElement('link');
+    apple.rel = 'apple-touch-icon';
+    apple.href = makePngDataUrl(192);
+    document.head.appendChild(apple);
+  })();
+
+  // === Minimal service worker (Chrome/Android'in yükleme kriteri için) ===
+  (function registerSW(){
+    if(!('serviceWorker' in navigator)) return;
+    const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('activate', e => clients.claim());
+      // Basit passthrough: offline cache yapmıyoruz; sadece SW varlığı yeterli.
+      self.addEventListener('fetch', () => {});
+    `;
+    const swUrl = URL.createObjectURL(new Blob([swCode], {type:'text/javascript'}));
+    navigator.serviceWorker.register(swUrl).catch(()=>{});
+  })();
 </script>
 </head>
 <body>
