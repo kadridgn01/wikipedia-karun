@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deneme Ansiklopedi — Prof. Nihat</title>
+
+<style>
+  /* ====== Temel değişkenler ====== */
+  :root{
+    --bg:#f3f5f7;
+    --paper:#ffffff;
+    --txt:#1f2328;
+    --muted:#5b616e;
+    --link:#2b6adf;
+    --border:#d8dee4;
+    --rule:#cdd5df;
+    --maxw:1200px;
+    --col-mid:340px;   /* orta sütun (infobox) */
+    --col-right:300px; /* sağ sütun (TOC) */
+    --radius:10px;
+    --shadow:0 1px 2px rgba(0,0,0,.05), 0 12px 24px rgba(0,0,0,.06);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans",sans-serif}
+  a{color:var(--link);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  /* ====== Üst şerit ====== */
+  .topbar{
+    background:var(--paper);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar .container{
+    max-width:var(--maxw); margin:0 auto; padding:14px 18px;
+  }
+  .brand{font-weight:800;letter-spacing:.2px}
+  .subtitle{color:var(--muted);font-size:13px}
+
+  /* ====== Ana grid ====== */
+  .wrap{max-width:var(--maxw); margin:22px auto; padding:0 18px;}
+  .grid{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) var(--col-mid) var(--col-right);
+    gap:22px;
+  }
+
+  /* ====== Kart / kutu ====== */
+  .card{
+    background:var(--paper);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+  }
+
+  /* ====== Sol sütun (makale) ====== */
+  article.card{padding:20px}
+  h1{
+    font: 700 36px/1.2 Georgia,Cambria,"Times New Roman",Times,serif;
+    margin:.2em 0 .4em;
+  }
+  .deck{color:var(--muted);border-left:4px solid #cfe7cf;background:#eef6ee;
+        padding:10px 12px;border-radius:6px;margin: 6px 0 16px}
+  .rule{border-top:1px solid var(--rule);margin:10px 0 18px}
+  h2{
+    font:700 22px/1.3 Georgia,Cambria,Times,serif;
+    margin:1.1em 0 .35em;
+    border-bottom:1px solid var(--rule);
+    padding-bottom:.25em;
+  }
+  p{margin:.65em 0}
+  ul{margin:.3em 0 .9em .9em}
+
+  /* ====== Orta sütun (infobox) ====== */
+  .info.card{padding:0; overflow:hidden}
+  .info .head{
+    font-weight:800; background:#eef2ff; border-bottom:1px solid var(--border);
+    padding:10px 12px;
+  }
+  .info .photo{
+    width:100%; height:auto; display:block; object-fit:cover;
+    border-bottom:1px solid var(--border);
+    max-height:380px;
+  }
+  .info table{width:100%; border-collapse:collapse; font-size:14px}
+  .info td{padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:top}
+  .info td.label{color:var(--muted); width:36%}
+
+  /* ====== Sağ sütun (TOC + kutular) ====== */
+  .side .sticky{position:sticky; top:16px; display:flex; flex-direction:column; gap:16px}
+  .toc.card{padding:14px}
+  .toc h3{margin:.2em 0 .4em; font-size:15px; color:var(--muted); letter-spacing:.5px}
+  .toc ul{margin:0; padding-left:16px}
+  .toc li{margin:4px 0}
+  .toc a{color:var(--link)}
+
+  /* ====== Alt grid: geniş içerik ====== */
+  .below{
+    grid-column:1 / -1;
+    display:grid; gap:22px;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    margin-top:22px;
+  }
+  .below .card{padding:20px}
+
+  /* ====== Footer ====== */
+  footer{color:var(--muted); font-size:13px; text-align:center; padding:18px 0}
+
+  /* ====== Responsive ====== */
+  @media (max-width:1100px){
+    .grid{grid-template-columns:minmax(0,1fr) var(--col-mid); }
+    .side{grid-column:1 / -1}
+    .below{grid-template-columns:1fr}
+  }
+  @media (max-width:780px){
+    .grid{grid-template-columns:1fr}
+    .info .photo{max-height:none}
+  }
+</style>
+
+<script>
+  // Başlıklardan "İçindekiler" üret
+  document.addEventListener('DOMContentLoaded', ()=>{
+    const list = document.querySelector('.toc ul');
+    if(!list) return;
+    document.querySelectorAll('article h2[id]').forEach(h=>{
+      const li=document.createElement('li');
+      const a=document.createElement('a');
+      a.href = '#'+h.id;
+      a.textContent = h.textContent;
+      li.appendChild(a); list.appendChild(li);
+    });
+  });
+</script>
+</head>
+<body>
+
+  <!-- Üst bar -->
+  <div class="topbar">
+    <div class="container">
+      <div class="brand">Deneme Ansiklopedi</div>
+      <div class="subtitle">Organize İşler Dizi Projesi</div>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <!-- Üç sütun üst satır -->
+    <div class="grid">
+      <!-- Sol: Makale -->
+      <article class="card">
+        <h1>Prof. Nihat Güreş — Eğitimci & Araştırmacı</h1>
+        <div class="deck">Buradaki metinleri istediğim gibi değiştirebiliyorum.</div>
+
+        <div class="rule"></div>
+
+        <h2 id="yasam">Yaşamı</h2>
+        <p>1984 yılında Manisa’da doğdu. Tarih ve eğitim alanında öğrenim gördü.
+          Görev yaptığı yıllar boyunca farklı şehirlerde öğretmenlik yaptıktan sonra idari kademelere geçti.</p>
+        <p>Bugün kırk yaşında olan Güreş, İstanbul’da köklü bir lisede müdürlük yapmaktadır.
+          Eğitimciliğinin yanı sıra Anadolu’nun kültürel mirası,
+          eski medeniyetler ve tarihi belgeler üzerine kişisel araştırmalarıyla da bilinir. 
+          Akademik yayınlarının yanı sıra çeşitli konferans ve seminerlerde konuşmalar yapmıştır. Bir kızı vardır.</p>
+      </article>
+
+      <!-- Orta: Biyografi kutusu -->
+      <aside class="info card">
+        <div class="head">Biyografik Bilgi</div>
+        <!-- Görseli repo köküne 'green-screen.png' adıyla koyduysan direkt çalışır -->
+        <img src="green-screen.png" alt="Prof. Nihat portre" class="photo">
+        <table>
+          <tr><td class="label">Doğum</td><td>04 Şubat 1984, Manisa (40 yaşında)</td></tr>
+          <tr><td class="label">Ölüm</td><td>- </td></tr>
+          <tr><td class="label">Meslek</td><td>Eğitimci, Araştırmacı</td></tr>
+          <tr><td class="label">Bilinir</td><td>Anadolu tarihi ve eski belgeler üzerine çalışmaları</td></tr>
+        </table>
+      </aside>
+
+      <!-- Sağ: İçindekiler -->
+      <aside class="side">
+        <div class="sticky">
+          <section class="toc card">
+            <h3>İçindekiler</h3>
+            <ul></ul>
+          </section>
+          <section class="card" style="padding:14px">
+            <h3 style="margin:.2em 0 .6em; font-size:16px;">Hızlı Linkler</h3>
+            <ul style="margin:0; padding-left:16px;">
+              <li><a href="#yasam">Yaşamı</a></li>
+              <li><a href="#eserler">Eserleri</a></li>
+              <li><a href="#kaynakca">Kaynakça</a></li>
+            </ul>
+          </section>
+        </div>
+      </aside>
+
+      <!-- Alt satır: iki kutu -->
+      <section class="below">
+        <section class="card" id="eserler">
+          <h2>Eserleri</h2>
+          <ul>
+            <li><strong>Anadolu’nun Kayıp Belgeleri</strong> (makaleler derlemesi)</li>
+            <li>Eğitimde Tarihsel Perspektif</li>
+             <li>Çeşitli dergilerde yayımlanmış araştırma yazıları</li>
+          </ul>
+        </section>
+
+        <section class="card" id="kaynakca">
+          <h2>Kaynakça</h2>
+          <ol>
+            <li>Üniversite arşiv kayıtları.</li>
+            <li>Katıldığı ulusal konferans bildirileri.</li>
+             <li>Yerel basında yayımlanmış röportajlar.</li>
+          </ol>
+        </section>
+      </section>
+    </div>
+
+    <footer>© Ansiklopedi</footer>
+  </main>
+</body>
+</html>
